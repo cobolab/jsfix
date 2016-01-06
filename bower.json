@@ -1,0 +1,23 @@
+{
+    "name"       : "jsfix",
+    "description": "A Lightweight Javascript Patches",
+    "main"       : "dist/jsfix.js",
+    "authors"    : [
+        "Nanang Mahdaen El Agung <nanang@mahdaen.name>"
+    ],
+    "license"    : "MIT",
+    "keywords"   : [
+        "native",
+        "javascript",
+        "patches"
+    ],
+    "homepage"   : "https://github.com/cobolab/jsfix",
+    "moduleType" : [ ],
+    "ignore"     : [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ]
+}
