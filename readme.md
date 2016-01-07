@@ -1,7 +1,7 @@
 # JSFix
 
 A Lightweight Javascript Patches.
-This paches is works for both NodeJS and Browser. This patches is created to support he Cobolab project.
+This paches is works for both NodeJS and Browser. This patches is created to support the Stater project.
 
 ## Helpers
 
@@ -140,6 +140,71 @@ num.$each(function(value) {
 arr.$each, function(value, index) {
   console.log(value, index);
 }, true);
+```
+
+##### **Path Getter and Setter**
+
+An array and object path getter and setter.
+
+**`obj.$get()`**
+
+Get an object and array value using path.
+
+**Usage**
+
+```js
+obj.$get(path, default);
+```
+
+* **path**      - String path (e.g: `a.b.c`)
+* **default**   - Default value when the path value is undefined.
+
+**Example**
+
+```js
+var obj = { 
+  a: 1,
+  b: 2, 
+  c: {
+    ca: 1,
+    cb: {
+      cba: 1,
+      cbb: 2
+    }
+  }
+}
+
+var arr = [ 'a', 'b', { a: 1, b: 2 } ]
+
+console.log(obj.$get('a.aa');       // undefined
+console.log(obj.$get('c.cb.cba');   // 1
+console.log(obj.$get('c.cc', 10);   // 10 since the value is undefined.
+
+console.log(arr.$get('0.d');        // undefined
+console.log
+```
+
+**`obj.$set()`**
+
+Set an object and array value using path.
+
+**Usage**
+
+```js
+obj.$set(path, value);
+```
+
+* **path**  - String path (e.g: `a.b.c`)
+* **value** - Value to set to.
+
+**Example**
+
+```js
+var obj = {},
+    arr = [];
+    
+obj.$set('a.b.c', 100); // { a: { b: { c: 100 } } }
+arr.$set('0.a.b', 100); // [ { a: { b: 100 } } ]
 ```
 
 
