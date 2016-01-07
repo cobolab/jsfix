@@ -9,6 +9,7 @@
             this.length = 0;
             this.cursor = 0;
             this.looper = false;
+            this.final  = false;
 
             if ( 'object' === typeof oba && !Array.isArray(oba) ) {
                 for ( var key in oba ) {
@@ -36,10 +37,15 @@
 
                     /* Call the loop handler */
                     if ( this.type === 'object' ) {
-                        this.looper.call(this, item.key, item.value, this.next);
+                        this.looper.call(this, item.key, item.value, this);
                     }
                     else {
-                        this.looper.call(this, item, (this.cursor - 1), this.next);
+                        this.looper.call(this, item, (this.cursor - 1), this);
+                    }
+                }
+                else {
+                    if ( this.final ) {
+                        this.final.call(this);
                     }
                 }
             }
@@ -57,6 +63,12 @@
             }
 
             return this;
+        }
+
+        then ( fn ) {
+            if ( 'function' === typeof fn ) {
+                this.final = fn;
+            }
         }
     }
 

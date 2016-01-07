@@ -98,7 +98,7 @@ Adding some methods to the `Object.prototype`.
 
 ##### **Direct Iterator**
 
-**`obj.$each()` ,`arr.$each()`, str.$each(), and num.$each()**
+**`obj.$each()` ,`arr.$each()`, `str.$each()`, and `num.$each()`**
 
 A direct object iterator, with reversed support for iterating array, number and string.
 
