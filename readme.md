@@ -176,12 +176,11 @@ var obj = {
 
 var arr = [ 'a', 'b', { a: 1, b: 2 } ]
 
-console.log(obj.$get('a.aa');       // undefined
-console.log(obj.$get('c.cb.cba');   // 1
-console.log(obj.$get('c.cc', 10);   // 10 since the value is undefined.
+console.log(obj.$get('a.aa'));       // undefined
+console.log(obj.$get('c.cb.cba'));   // 1
+console.log(obj.$get('c.cc', 10));   // 10 since the value is undefined.
 
-console.log(arr.$get('0.d');        // undefined
-console.log
+console.log(arr.$get('0.d'));        // undefined
 ```
 
 **`obj.$set()`**
