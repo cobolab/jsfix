@@ -156,8 +156,8 @@ Get an object and array value using path.
 obj.$get(path, default);
 ```
 
-* **path**      - String path (e.g: `a.b.c`)
-* **default**   - Default value when the path value is undefined.
+* **path**      - `Required` String path (e.g: `a.b.c`)
+* **default**   - *Optional* Default value when the path value is undefined.
 
 **Example**
 
@@ -193,8 +193,8 @@ Set an object and array value using path.
 obj.$set(path, value);
 ```
 
-* **path**  - String path (e.g: `a.b.c`)
-* **value** - Value to set to.
+* **path**  - `Required` String path (e.g: `a.b.c`)
+* **value** - `Required` Value to set to.
 
 **Example**
 
