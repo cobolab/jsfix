@@ -1,5 +1,5 @@
 {
-    "name"       : "jsfix",
+    "name"       : "cb-jsfix",
     "description": "A Lightweight Javascript Patches",
     "main"       : "dist/jsfix.js",
     "authors"    : [
