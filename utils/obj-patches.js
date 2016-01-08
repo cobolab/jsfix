@@ -263,10 +263,14 @@
                 let cur = this.$dir(true);
                 let src = from.$dir(true);
 
+                // Change the iterated items to the higher length.
+                let trg = cur;
+
+                if ( src.$keys().length >= cur.$keys().length ) trg = src;
+
                 // Iterating each path to match the value.
-                cur.$each(( key, val ) => {
+                trg.$each(( key, val ) => {
                     if ( this.$get(key) !== from.$get(key) ) {
-                        // Add the path to the result if the value is difference.
                         dif[ key ] = { old : this.$get(key), new : from.$get(key) };
                     }
                 });
