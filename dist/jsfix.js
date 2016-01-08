@@ -142,6 +142,7 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             this.length = 0;
             this.cursor = 0;
             this.looper = false;
+            this.final = false;
 
             if ('object' === (typeof oba === 'undefined' ? 'undefined' : _typeof(oba)) && !Array.isArray(oba)) {
                 for (var key in oba) {
@@ -170,9 +171,13 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
 
                         /* Call the loop handler */
                         if (this.type === 'object') {
-                            this.looper.call(this, item.key, item.value, this.next);
+                            this.looper.call(this, item.key, item.value, this);
                         } else {
-                            this.looper.call(this, item, this.cursor - 1, this.next);
+                            this.looper.call(this, item, this.cursor - 1, this);
+                        }
+                    } else {
+                        if (this.final) {
+                            this.final.call(this);
                         }
                     }
                 }
@@ -191,6 +196,13 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
                 }
 
                 return this;
+            }
+        }, {
+            key: 'then',
+            value: function then(fn) {
+                if ('function' === typeof fn) {
+                    this.final = fn;
+                }
             }
         }]);
 
@@ -495,10 +507,14 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
                 var cur = this.$dir(true);
                 var src = from.$dir(true);
 
+                // Change the iterated items to the higher length.
+                var trg = cur;
+
+                if (src.$keys().length >= cur.$keys().length) trg = src;
+
                 // Iterating each path to match the value.
-                cur.$each(function (key, val) {
+                trg.$each(function (key, val) {
                     if (_this.$get(key) !== from.$get(key)) {
-                        // Add the path to the result if the value is difference.
                         dif[key] = { old: _this.$get(key), new: from.$get(key) };
                     }
                 });
