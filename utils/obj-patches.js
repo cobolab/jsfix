@@ -2,6 +2,63 @@
     'use strict';
 
     /**
+     * Prototype Extender
+     * Add new prototype to a Javascript Object Prototype.
+     *
+     * @param target    - Javascript object. E.g: Object, Array, String.
+     * @param name      - String prototype name. E.g: getChild
+     * @param handler   - Function to handle the prototype.
+     * @constructor
+     */
+    jsroot.$dext = ProrotypeExtender;
+
+    function ProrotypeExtender ( target, name, handler ) {
+        if ( target && isString(name) && isFunction(handler) ) {
+            Object.defineProperty(target.prototype, name, {
+                enumerable : false,
+                writable   : true,
+                value      : handler
+            });
+        }
+    }
+
+    /**
+     * Define Getter to a Javascript object.
+     *
+     * @param target    - Javascript Object.
+     * @param name      - String property name.
+     * @param handler   - Function to handle the getter.
+     * @constructor
+     */
+    jsroot.$dget = DefineGetter;
+
+    function DefineGetter ( target, name, handler ) {
+        if ( target && isString(name) && isFunction(handler) ) {
+            Object.defineProperty(target, name, {
+                get : handler
+            });
+        }
+    }
+
+    /**
+     * Define Setter to a Javascript object.
+     *
+     * @param target    - Javascript Object.
+     * @param name      - String property name.
+     * @param handler   - Function to handle the setter.
+     * @constructor
+     */
+    jsroot.$dset = DefineSetter;
+
+    function DefineSetter ( target, name, handler ) {
+        if ( target && isString(name) && isFunction(handler) ) {
+            Object.defineProperty(target, name, {
+                set : handler
+            });
+        }
+    }
+
+    /**
      * Object Patches
      * This patches contains javascript object patch to add some functionality to help developers working with object.
      * The common patches is methods to work with object path, including path getter and setter, path parser, etc.
@@ -9,7 +66,7 @@
      *
      * @type {any}
      */
-    let patches = {
+    var patches = {
         /**
          * Path Value Getter
          * This function will get object value by the given path.
@@ -22,12 +79,12 @@
             if ( !'string' === typeof path ) return;
 
             /* Define current scope, paths list, result and done status */
-            let current = this, paths = path.split(this.__delimiter || '.'), result, done;
+            var current = this, paths = path.split(this.__delimiter || '.'), result, done;
 
             /* Iterate deeply until done */
             while ( !done && paths.length > 0 ) {
                 /* Define next object */
-                let next = paths[ 0 ];
+                var next = paths[ 0 ];
 
                 if ( paths.length <= 1 ) {
                     /* Check last path and adding result if exist */
@@ -66,6 +123,13 @@
             return result;
         },
 
+        // Define getter.
+        $dget : function ( name, handler ) {
+            $dget(this, name, handler);
+
+            return this;
+        },
+
         /**
          * Path Value Setter
          * This function will set object value by the give path and value.
@@ -78,12 +142,12 @@
             if ( !'string' === typeof path ) return;
 
             /* Define current scope and paths list */
-            let current = this, paths = path.split(this.__delimiter || '.');
+            var current = this, paths = path.split(this.__delimiter || '.');
 
             /* Iterate scopes until done */
             while ( paths.length > 0 ) {
                 /* Define next target */
-                let next = paths[ 0 ];
+                var next = paths[ 0 ];
 
                 /* Apply the value if current path is the last path */
                 if ( paths.length <= 1 ) {
@@ -111,6 +175,13 @@
             return this;
         },
 
+        // Define setter.
+        $dset : function ( name, handler ) {
+            $dset(this, name, handler);
+
+            return this;
+        },
+
         /**
          * Array Item Adder
          * This function will add new item to the array by the given path.
@@ -121,7 +192,7 @@
          */
         $add : function ( path, value ) {
             if ( Array.isArray(this.$get(path)) ) {
-                let current = this, paths = path.split(this.__delimiter || '.');
+                var current = this, paths = path.split(this.__delimiter || '.');
 
                 while ( paths.length > 0 ) {
                     current = current[ paths[ 0 ] ];
@@ -144,12 +215,12 @@
          */
         $del : function ( path, length ) {
             /* Define current scope, paths list and done stat */
-            let current = this, paths = path.split(this.__delimiter || '.'), done;
+            var current = this, paths = path.split(this.__delimiter || '.'), done;
 
             /* Iterate each path until done */
             while ( !done && paths.length > 0 ) {
                 /* Define next path */
-                let next = paths[ 0 ];
+                var next = paths[ 0 ];
 
                 /* Last iteration */
                 if ( paths.length <= 1 ) {
@@ -190,7 +261,7 @@
          */
         $dir : function ( noroot ) {
             /* Define current path scope and path list */
-            let current = '', maps = {};
+            var current = '', maps = {};
 
             /* Perform Extract */
             extract(this);
@@ -200,14 +271,14 @@
                 /* Iterating each items and properties */
                 target.$each(function ( a, b ) {
                     /* Copy last path */
-                    let last = current;
+                    var last = current;
 
                     /* Defining key and value by checking the target type */
-                    let key = Array.isArray(target) ? b : a,
+                    var key = Array.isArray(target) ? b : a,
                         val = Array.isArray(target) ? a : b;
 
                     /* Creating new path */
-                    let path = current + (!current ? '' : '.') + key;
+                    var path = current + (!current ? '' : '.') + key;
 
                     /* Adding path to maps */
                     if ( 'object' === typeof val ) {
@@ -256,15 +327,15 @@
             if ( Array.isArray(from) && !Array.isArray(this) ) return {};
 
             // Creating result.
-            let dif = {};
+            var dif = {};
 
             if ( 'object' === typeof from ) {
                 // Parsing the both object paths.
-                let cur = this.$dir(true);
-                let src = from.$dir(true);
+                var cur = this.$dir(true);
+                var src = from.$dir(true);
 
                 // Change the iterated items to the higher length.
-                let trg = cur;
+                var trg = cur;
 
                 if ( src.$keys().length >= cur.$keys().length ) trg = src;
 
@@ -292,7 +363,7 @@
 
             /* Decide to use Array iterator or Object iterator */
             if ( Array.isArray(this) ) {
-                let i, ln;
+                var i, ln;
 
                 if ( !reverse ) {
                     /* Iterating each items */
@@ -309,7 +380,7 @@
             }
             else {
                 /* Iterating each properties */
-                for ( let key in this ) {
+                for ( var key in this ) {
                     if ( this.hasOwnProperty(key) ) {
                         /* Apply this object to the handler */
                         handler.call(this, key, this[ key ]);
@@ -341,12 +412,12 @@
             if ( !Array.isArray(ignore) ) ignore = [];
 
             /* Creating target holder and target maps */
-            let main = this, self = this.$dir();
+            var main = this, self = this.$dir();
 
             /* Iterate each sources */
-            for ( let i = 0; i < sources.length; ++i ) {
+            for ( var i = 0; i < sources.length; ++i ) {
                 /* Creating source holder and source maps */
-                let base = sources[ i ], next = base.$dir(), igm = '??';
+                var base = sources[ i ], next = base.$dir(), igm = '??';
 
                 /* Continue if type of target is equal to type of source */
                 if ( (Array.isArray(main) && Array.isArray(base)) || (!Array.isArray(main) && !Array.isArray(base)) ) {
@@ -404,7 +475,7 @@
             /* Creating Sorter */
             function sort ( target ) {
                 /* Creating result */
-                let result;
+                var result;
 
                 /* Array Sorter */
                 if ( Array.isArray(target) ) {
@@ -432,7 +503,7 @@
                     /* Create target keys list to perform sort and iterate eachitem to sort the childs before adding to result */
                     Object.keys(target).sort(handler).$each(function ( key ) {
                         /* Creating child from target */
-                        let value = target[ key ];
+                        var value = target[ key ];
 
                         if ( 'object' !== typeof value ) {
                             /* Add to result if child is not object or array */
@@ -481,7 +552,7 @@
             if ( !Array.isArray(this) || !'number' === typeof column ) return;
 
             /* Create group and current index */
-            let group = [],
+            var group = [],
                 currn = 0;
 
             /* Prepare Columns */
@@ -491,7 +562,7 @@
 
             /* Start Grouping */
             if ( mode === 'split' ) {
-                let gpn = Math.ceil(this.length / column),
+                var gpn = Math.ceil(this.length / column),
                     crg = 1;
 
                 this.$each(function ( val ) {
@@ -508,7 +579,7 @@
             }
             else if ( mode === 'chunk' ) {
                 /* Create child group */
-                let childGroup = [];
+                var childGroup = [];
 
                 /* Reset parent group */
                 group = [];
@@ -551,10 +622,35 @@
 
             return group;
         },
+
+        /**
+         * Prototype Extender
+         * Create new prototype methods to the current object/array.
+         *
+         * @param name
+         * @param handler
+         * @returns {Object}
+         */
+        $ext : function ( name, handler ) {
+            if ( isString(name) && isFunction(handler) ) {
+                Object.defineProperty(this.constructor.prototype, name, {
+                    enumerable : false,
+                    writable   : true,
+                    value      : handler
+                });
+            }
+            else if ( isObject(name) ) {
+                name.$each(function ( name, handler ) {
+                    this.$ext(name, handler);
+                });
+            }
+
+            return this;
+        }
     }
 
     /* Applying Object Extensions */
-    for ( let key in patches ) {
+    for ( var key in patches ) {
         /* Locking Extension */
         Object.defineProperty(Object.prototype, key, {
             enumerable : false,

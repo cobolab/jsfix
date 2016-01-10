@@ -5,7 +5,9 @@ This paches is works for both NodeJS and Browser. This patches is created to sup
 
 ## Helpers
 
-#### Data Type
+### Public Methods
+
+#### **Data Type**
 
 Data type helpers is a functions to validate the variable value type.
 
@@ -21,8 +23,6 @@ console.log(isString(int)); // false
 console.log(isNumber(str)); // false
 console.log(isNumber(int)); // true
 ```
-
-**Methods**
 
 **`isString()`**
 
@@ -60,8 +60,53 @@ Check does the variable value is a URL.
 
 Check does the variable value is a Email.
 
+#### **Utilities**
+
+##### **`$dext()`**
+
+Assign new prototypes to Javascript objects.
+
+**Example**
+
+```js
+$dext(Object, 'keys', function() { return Object.keys(this); }); // Assign prototype to Object.
+$dest(String, 'keys', function() { return this.split(''); });    // Assign prototype to String.
+
+console.log('String'.keys()); // ['S', 't', 'r', 'i', 'n', 'g']
+```
+
+##### **`$dget()`**
+
+Define getter to Javascript objects.
+
+**Example**
+
+```js
+var x = { a: 1, b: 2 };
+
+$dget(x, 'c', function() { return 'Value of c is: 3' });
+
+console.log(x.c); // Value of c is: 3
+```
+
+##### **`$dset()`**
+
+Define setter to Javascript objects.
+
+**Example**
+
+```js
+var x = { a: 1, b: 2 };
+
+$dset(x, 'c', function(value) { this._values.c = (value * 2) });
+
+x.c = 10;
+
+console.log(x._values.c); // 20
+```
+
 ***
-##### Iterator
+### Iterator
 
 A simple Object and Array iterator that wait until the `this.next()` function is executed to proceed the next items.
 
@@ -92,13 +137,13 @@ forwait([1, 2, 3], function(value, index) {
 ***
 ## Patches
 
-#### Object Patches
+### Object Patches
 
 Adding some methods to the `Object.prototype`.
 
-##### **Direct Iterator**
+#### **Direct Iterator**
 
-**`obj.$each()` ,`arr.$each()`, `str.$each()`, and `num.$each()`**
+##### **`obj.$each()` ,`arr.$each()`, `str.$each()`, and `num.$each()`**
 
 A direct object iterator, with reversed support for iterating array, number and string.
 
@@ -142,11 +187,11 @@ arr.$each, function(value, index) {
 }, true);
 ```
 
-##### **Path Helpers**
+#### **Path Helpers**
 
 An array and object path helpers.
 
-**`obj.$get()`**
+##### **`obj.$get()`**
 
 Get an object and array value using path.
 
@@ -184,7 +229,7 @@ console.log(arr.$get('0.d'));        // undefined
 console.log(arr.$get('2.a'));        // 1
 ```
 
-**`obj.$set()`**
+##### **`obj.$set()`**
 
 Set an object and array value using path.
 
@@ -207,7 +252,7 @@ obj.$set('a.b.c', 100); // { a: { b: { c: 100 } } }
 arr.$set('0.a.b', 100); // [ { a: { b: 100 } } ]
 ```
 
-**`obj.$add()`**
+##### **`obj.$add()`**
 
 Push an item into array in path.
 
@@ -228,7 +273,7 @@ var obj = { a: { b: { c: [] } } };
 obj.$add('a.b.c', 'item'); // { a: { b: { c: [ 'item' ] } } }
 ```
 
-**`obj.$del()`**
+##### **`obj.$del()`**
 
 Array and Object path remover.
 
@@ -250,7 +295,7 @@ obj.$del('a.b.d');      // Remove property "d"
 obj.$del('a.b.c.0', 2); // Remove 1 and 2 from c.
 ```
 
-**`obj.$dir()`**
+##### **`obj.$dir()`**
 
 Extract the paths from array or object.
 
@@ -270,7 +315,7 @@ var obj = { a: { b: { c: 3, d: 4 } } };
 obj.$dir(true);     // { 'a.b.c': { type: 'number', body: 3 }, 'a.b.d': { type: 'number', body: 4 }
 ```
 
-**`obj.$dif()`**
+##### **`obj.$dif()`**
 
 Compare two object (object to object, array to array).
 
@@ -304,7 +349,7 @@ b.$dif(a);
 
 ```
 
-**`obj.$join()`**
+##### **`obj.$join()`**
 
 Recursively merge two objects or arrays (object to object, array to array).
 
@@ -326,7 +371,7 @@ var a = { a: 1, b: 2 },
 a.$join(b); { a: 1, b: 1, c: 3 }
 ```
 
-**`obj.$sort()`**
+##### **`obj.$sort()`**
 
 Recursively sort object or array.
 
@@ -346,7 +391,7 @@ var obj = { d: 4, b: 2, c: 3, a: 1 };
 obj.$sort(); // { a: 1, b: 2, c: 3, d: 4 };
 ```
 
-**`obj.$keys()`**
+##### **`obj.$keys()`**
 
 Direct Object.keys()
 
@@ -358,7 +403,7 @@ var obj = { a: 1, b: 2 };
 obj.$keys(); // [ 'a', 'b' ]
 ```
 
-**`obj.$group()`**
+##### **`obj.$group()`**
 
 Group an array items with specific column per row.
 
@@ -380,7 +425,30 @@ arr.$group(3);          // [ [ 1, 4, 7 ], [ 2, 5, 8 ], [ 3, 6 ] ]
 arr.$group(3, 'split'); // [ [ 1, 2, 3 ], [ 4, 5, 6 ], [ 7, 8 ] ]
 ```
 
-**`Number.random()`**
+##### **`obj.$ext()`**
+
+Extend the already defined object and array prototypes.
+
+**Usage**
+
+```js
+obj.$ext(name, handler);
+```
+
+* **`name`**    - String prototype name, or object contains `key` as name and `value` as handler.
+* **`handler`** - Function to handle the prototype call.
+
+**Example**
+
+```js
+var x = { a: 1, b: 2 }
+
+x.$ext('keys', function() { return Object.keys(this); });
+
+console.log(x.keys()); // ['a', 'b']
+```
+
+##### **`Number.random()`**
 
 Generate random number.
 
