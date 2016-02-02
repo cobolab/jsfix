@@ -24,41 +24,90 @@ console.log(isNumber(str)); // false
 console.log(isNumber(int)); // true
 ```
 
+**`isDefined()`**
+**`isUndefined()`**
+
+Check does the function argument is defined.
+
+**`isNull()`**
+**`isNotNull()`**
+
+Check does the variable value is null.
+
 **`isString()`**
+**`isNotString()`**
 
 Check does the variable value is a string.
 
 **`isNumber()`**
+**`isNotNumber()`**
 
 Check does the variable value is a number.
 
 **`isFunction()`**
+**`isNotFunction()`**
 
 Check does the variable value is a function.
 
 **`isArray()`**
+**`isNotArray()`**
 
 Check does the variable value is an array.
 
 **`isObject()`**
+**`isNotObject()`**
 
 Check does the variable value is an object and not an array.
 
 **`isBoolean()`**
+**`isNotBoolean()`**
 
 Check does the variable value is a boolean.
 
 **`isDate()`**
+**`isNotDate()`**
 
 Check does the variable value is a date.
 
 **`isURL()`**
+**`isNotURL()`**
 
 Check does the variable value is a URL.
 
 **`isEmail()`**
+**`isNotEmail()`**
 
 Check does the variable value is a Email.
+
+**`isArguments()`**
+**`isNotArguments()`**
+
+Check does the variable value is an function Arguments.
+
+**`isError()`**
+**`isNotError()`**
+
+Check does the variable value is an error object.
+
+**`isJSON()`**
+**`isNotJSON()`**
+
+Check does the variable value is a valid JSON object.
+
+**`isJSONString()`**
+**`isNotJSONString()`**
+
+Check does the variable value is a valid JSON string.
+
+**`isRegExp()`**
+**`isNotRegExp()`**
+
+Check does the variable value is a RegExp.
+
+**`isEmpty()`**
+**`isNotEmpty()`**
+
+Check does the variable value is empty. Value can be Object, Array, and String.
 
 #### **Utilities**
 
@@ -113,7 +162,7 @@ A simple Object and Array iterator that wait until the `this.next()` function is
 **Usage**
 
 ```js
-forwait(object, handler);
+forwait(object, handler).then(fn).break(fn);
 ```
 
 **Example**
@@ -127,10 +176,24 @@ forwait({ a: 1, b: 2, c: 3}, function(key, value) {
 });
 
 // Iterating array.
-forwait([1, 2, 3], function(value, index) {
+forwait([1, 2, 3, 4], function(value, index) {
   console.log(value, index);
   
-  this.next();
+  if (value === 3) {
+    // Stop iteration.
+    this.break();
+  else {
+    // Next item.
+    this.next();
+  }
+})
+// Call function after iteration completed.
+.then(function() {
+  console.log('Iteration completed');
+})
+// Call function when iteration stopped.
+.break(funtion() {
+  console.log('Iteration stopped.');
 });
 ```
 
@@ -143,7 +206,7 @@ Adding some methods to the `Object.prototype`.
 
 #### **Direct Iterator**
 
-##### **`obj.$each()` ,`arr.$each()`, `str.$each()`, and `num.$each()`**
+##### **`obj.$each()`, `arr.$each()`, `str.$each()`, and `num.$each()`**
 
 A direct object iterator, with reversed support for iterating array, number and string.
 

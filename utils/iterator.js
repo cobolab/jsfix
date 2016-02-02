@@ -8,8 +8,10 @@
             this.items  = [];
             this.length = 0;
             this.cursor = 0;
-            this.looper = false;
-            this.final  = false;
+
+            this.looper = null;
+            this.final  = null;
+            this.error  = null;
 
             if ( 'object' === typeof oba && !Array.isArray(oba) ) {
                 for ( var key in oba ) {
@@ -43,8 +45,8 @@
                         this.looper.call(this, item, (this.cursor - 1), this);
                     }
                 }
-                else {
-                    if ( this.final ) {
+                else if ( this.cursor === this.length ) {
+                    if ( 'function' === typeof this.final ) {
                         this.final.call(this);
                     }
                 }
@@ -69,6 +71,21 @@
             if ( 'function' === typeof fn ) {
                 this.final = fn;
             }
+
+            return this;
+        }
+
+        break ( fn ) {
+            if ( 'function' === typeof fn ) {
+                this.error = fn;
+            }
+            else {
+                if ( 'function' === typeof this.error ) {
+                    this.error.call(this);
+                }
+            }
+
+            return this;
         }
     }
 
@@ -83,7 +100,14 @@
          * @returns {*}
          */
         forwait( arg, fn ) {
-            return new Looper(arg).each(fn);
+            // Create new looper instance.
+            var looper = new Looper(arg);
+
+            // Perform looping.
+            looper.each(fn);
+
+            // Return the looper object to enable chaining.
+            return looper;
         }
     }
 

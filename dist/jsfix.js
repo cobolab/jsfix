@@ -2,16 +2,82 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function (jsroot) {
     "use strict";
 
-    // Collecting helper methods.
+    // Credit Card RegExp
 
+    var regCC = /^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$/,
+
+    // Security Number
+    regSN = /^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$/,
+
+    // Alpha Numeric
+    regAN = /^[A-Za-z0-9]+$/,
+
+    // Affirmative
+    regAF = /^(?:1|t(?:rue)?|y(?:es)?|ok(?:ay)?)$/,
+
+    // IPv4
+    regI4 = /^(?:(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(?:\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/,
+
+    // IPv6
+    regI6 = /^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$|^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/,
+
+    // Time String
+    regTime = /^(2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$/,
+
+    // Date String
+    regDate = /^(1[0-2]|0?[1-9])\/(3[01]|[12][0-9]|0?[1-9])\/(?:[0-9]{2})?[0-9]{2}$/,
+
+    // URL
+    regURL = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/i,
+
+    // Email Address
+    regEmail = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i,
+
+    // Hexadecimal
+    regHexa = /^[0-9a-fA-F]+$/,
+
+    // HEX Color
+    regColor = /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+
+    var RegName = {
+        URL: regURL,
+        IPv4: regI4,
+        IPv6: regI6,
+        Email: regEmail,
+        HexColor: regColor,
+        Hexadecimal: regHexa,
+        TimeString: regTime,
+        DateString: regDate,
+        CreditCard: regCC,
+        AlphaNumeric: regAN,
+        Affirmative: regAF,
+        SecurityNumber: regSN
+    };
+
+    // Collecting helper methods.
     var methods = {
+        /**
+         * Define Checker
+         * Check does the argument type is defined.
+         *
+         * @param arg
+         * @returns {boolean}
+         */
+
+        isDefined: function isDefined(arg) {
+            return 'undefined' === typeof arg;
+        },
+        isUndefined: function isUndefined(arg) {
+            return !isDefined(arg);
+        },
+
         /**
          * String Checker
          * Check does the argument type is a string.
@@ -19,9 +85,11 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
          * @param arg - Argument variable name.
          * @returns {boolean}
          */
-
         isString: function isString(arg) {
-            return 'string' === typeof arg ? true : false;
+            return 'string' === typeof arg;
+        },
+        isNotString: function isNotString(arg) {
+            return !isString(arg);
         },
 
         /**
@@ -33,7 +101,10 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
          * @returns {boolean}
          */
         isFunction: function isFunction(arg) {
-            return 'function' === typeof arg ? true : false;
+            return 'function' === typeof arg;
+        },
+        isNotFunction: function isNotFunction(arg) {
+            return !isFunction(arg);
         },
 
         /**
@@ -44,7 +115,10 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
          * @returns {boolean}
          */
         isObject: function isObject(arg) {
-            return 'object' === (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) && !Array.isArray(arg) ? true : false;
+            return toString.call(arg) === '[object Object]' ? true : false;
+        },
+        isNotObject: function isNotObject(arg) {
+            return !isObject(arg);
         },
 
         /**
@@ -55,7 +129,10 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
          * @returns {boolean}
          */
         isArray: function isArray(arg) {
-            return Array.isArray(arg);
+            return toString.call(arg) === '[object Array]' ? true : false;
+        },
+        isNotArray: function isNotArray(arg) {
+            return !isArray(arg);
         },
 
         /**
@@ -68,6 +145,9 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
         isBoolean: function isBoolean(arg) {
             return 'boolean' === typeof arg ? true : false;
         },
+        isNotBoolean: function isNotBoolean(arg) {
+            return !isBoolean(arg);
+        },
 
         /**
          * Number Checker
@@ -77,7 +157,10 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
          * @returns {boolean}
          */
         isNumber: function isNumber(arg) {
-            return 'number' === typeof arg ? true : false;
+            return 'number' === typeof arg && !isNaN(arg) ? true : false;
+        },
+        isNotNumber: function isNotNumber(arg) {
+            return !isNumber(arg);
         },
 
         /**
@@ -88,7 +171,10 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
          * @returns {boolean}
          */
         isDate: function isDate(arg) {
-            return !isNaN(new Date(arg).getDate()) ? true : false;
+            return arg.getDate && !isNaN(arg) ? true : false;
+        },
+        isNotDate: function isNotDate(arg) {
+            return !isDate(arg);
         },
 
         /**
@@ -102,6 +188,9 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             return (/^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i.test(arg) ? true : false
             );
         },
+        isNotURL: function isNotURL(arg) {
+            return !isURL(arg);
+        },
 
         /**
          * Email Checker
@@ -113,11 +202,139 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
         isEmail: function isEmail(arg) {
             return (/^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,6})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)$/i.test(arg) ? true : false
             );
+        },
+        isNotEmail: function isNotEmail(arg) {
+            return !isEmail(arg);
+        },
+
+        /**
+         * Type Arguments Checker
+         * Check does the given argument is an Arguments
+         *
+         * @param arg
+         * @returns {boolean}
+         */
+        isArguments: function isArguments(arg) {
+            return 'undefined' !== typeof arg && arg.toString() === '[object Arguments]' ? true : false;
+        },
+        isNotArguments: function isNotArguments(arg) {
+            return !isArguments(arg);
+        },
+
+        /**
+         * Type Error Checker
+         * Check does the given argument is an Error.
+         *
+         * @param arg
+         * @returns {boolean}
+         */
+        isError: function isError(arg) {
+            return toString.call(arg) === '[object Error]' ? true : false;
+        },
+        isNotError: function isNotError(arg) {
+            return !isError(arg);
+        },
+
+        /**
+         * Type Null Checker
+         * Check does the given argument is null.
+         *
+         * @param arg
+         * @returns {boolean}
+         */
+        isNull: function isNull(arg) {
+            return arg === null ? true : false;
+        },
+        isNotNull: function isNotNull(arg) {
+            return !isNull(arg);
+        },
+
+        /**
+         * Type JSON Checker
+         * Check does the given argument is a valid for JSON.
+         *
+         * @param arg
+         * @returns {*}
+         */
+        isJSON: function isJSON(arg) {
+            var result = undefined;
+
+            if (isObject(arg)) {
+                try {
+                    JSON.stringify(arg);
+                    result = true;
+                } catch (err) {
+                    result = false;
+                }
+            } else {
+                result = false;
+            }
+
+            return result;
+        },
+        isNotJSON: function isNotJSON(arg) {
+            return !isJSON(arg);
+        },
+
+        /**
+         * Type JSON String Checker
+         * Check does the given argument is a valid JSON String.
+         * @param arg
+         * @returns {*}
+         */
+        isJSONString: function isJSONString(arg) {
+            var result = undefined;
+
+            if (isString(arg)) {
+                try {
+                    JSON.parse(arg);
+                    result = true;
+                } catch (err) {
+                    result = false;
+                }
+            } else {
+                result = false;
+            }
+
+            return result;
+        },
+        isNotJSONString: function isNotJSONString(arg) {
+            return !isJSONString(arg);
+        },
+
+        /**
+         * Type RegExp Checker
+         * Check does the given argument is a RegExp.
+         * @param arg
+         * @returns {boolean}
+         */
+        isRegExp: function isRegExp(arg) {
+            return toString.call(arg) === '[object RegExp]';
+        },
+        isNotRegExp: function isNotRegExp(arg) {
+            return !isRegExp(arg);
+        },
+
+        // VALUE CHECKER
+        isEmpty: function isEmpty(arg) {
+            if (isObject(arg)) arg = Object.keys(arg);
+
+            return arg.length < 1;
         }
     };
 
+    var _loop = function _loop(key) {
+        methods['is' + key] = function (arg) {
+            return RegName[key].test(arg);
+        };
+    };
+
+    for (var key in RegName) {
+        _loop(key);
+    }
+
     // Adding the helper methods to the global object, and lock them.
-    for (var key in methods) {
+    Object.keys(methods).sort().forEach(function (key) {
         var value = methods[key];
 
         Object.defineProperty(jsroot, key, {
@@ -125,7 +342,7 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             writable: false,
             value: value
         });
-    }
+    });
 })('undefined' !== typeof global ? global : {});
 
 (function (jsroot) {
@@ -141,8 +358,10 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             this.items = [];
             this.length = 0;
             this.cursor = 0;
-            this.looper = false;
-            this.final = false;
+
+            this.looper = null;
+            this.final = null;
+            this.error = null;
 
             if ('object' === (typeof oba === 'undefined' ? 'undefined' : _typeof(oba)) && !Array.isArray(oba)) {
                 for (var key in oba) {
@@ -176,7 +395,7 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
                             this.looper.call(this, item, this.cursor - 1, this);
                         }
                     } else {
-                        if (this.final) {
+                        if ('function' === typeof this.final) {
                             this.final.call(this);
                         }
                     }
@@ -204,6 +423,17 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
                     this.final = fn;
                 }
             }
+        }, {
+            key: 'break',
+            value: function _break(fn) {
+                if ('function' === typeof fn) {
+                    this.error = fn;
+                } else {
+                    if ('function' === typeof this.error) {
+                        this.error.call(this);
+                    }
+                }
+            }
         }]);
 
         return Looper;
@@ -222,7 +452,14 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
          */
 
         forwait: function forwait(arg, fn) {
-            return new Looper(arg).each(fn);
+            // Create new looper instance.
+            var looper = new Looper(arg);
+
+            // Perform looping.
+            looper.each(fn);
+
+            // Return the looper object to enable chaining.
+            return looper;
         }
     };
 
@@ -242,6 +479,64 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
     'use strict';
 
     /**
+     * Prototype Extender
+     * Add new prototype to a Javascript Object Prototype.
+     *
+     * @param target    - Javascript object. E.g: Object, Array, String.
+     * @param name      - String prototype name. E.g: getChild
+     * @param handler   - Function to handle the prototype.
+     * @constructor
+     */
+
+    jsroot.$dext = ProrotypeExtender;
+
+    function ProrotypeExtender(target, name, handler) {
+        if (target && isString(name) && isFunction(handler)) {
+            Object.defineProperty(target.prototype, name, {
+                enumerable: false,
+                writable: true,
+                value: handler
+            });
+        }
+    }
+
+    /**
+     * Define Getter to a Javascript object.
+     *
+     * @param target    - Javascript Object.
+     * @param name      - String property name.
+     * @param handler   - Function to handle the getter.
+     * @constructor
+     */
+    jsroot.$dget = DefineGetter;
+
+    function DefineGetter(target, name, handler) {
+        if (target && isString(name) && isFunction(handler)) {
+            Object.defineProperty(target, name, {
+                get: handler
+            });
+        }
+    }
+
+    /**
+     * Define Setter to a Javascript object.
+     *
+     * @param target    - Javascript Object.
+     * @param name      - String property name.
+     * @param handler   - Function to handle the setter.
+     * @constructor
+     */
+    jsroot.$dset = DefineSetter;
+
+    function DefineSetter(target, name, handler) {
+        if (target && isString(name) && isFunction(handler)) {
+            Object.defineProperty(target, name, {
+                set: handler
+            });
+        }
+    }
+
+    /**
      * Object Patches
      * This patches contains javascript object patch to add some functionality to help developers working with object.
      * The common patches is methods to work with object path, including path getter and setter, path parser, etc.
@@ -249,7 +544,6 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
      *
      * @type {any}
      */
-
     var patches = {
         /**
          * Path Value Getter
@@ -265,8 +559,8 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             /* Define current scope, paths list, result and done status */
             var current = this,
                 paths = path.split(this.__delimiter || '.'),
-                result = undefined,
-                done = undefined;
+                result,
+                done;
 
             /* Iterate deeply until done */
             while (!done && paths.length > 0) {
@@ -307,6 +601,23 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             /* Returning the result */
             return result;
         },
+
+        // Define getter.
+        $dget: (function (_$dget) {
+            function $dget(_x, _x2) {
+                return _$dget.apply(this, arguments);
+            }
+
+            $dget.toString = function () {
+                return _$dget.toString();
+            };
+
+            return $dget;
+        })(function (name, handler) {
+            $dget(this, name, handler);
+
+            return this;
+        }),
 
         /**
          * Path Value Setter
@@ -353,6 +664,23 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             return this;
         },
 
+        // Define setter.
+        $dset: (function (_$dset) {
+            function $dset(_x3, _x4) {
+                return _$dset.apply(this, arguments);
+            }
+
+            $dset.toString = function () {
+                return _$dset.toString();
+            };
+
+            return $dset;
+        })(function (name, handler) {
+            $dset(this, name, handler);
+
+            return this;
+        }),
+
         /**
          * Array Item Adder
          * This function will add new item to the array by the given path.
@@ -389,7 +717,7 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             /* Define current scope, paths list and done stat */
             var current = this,
                 paths = path.split(this.__delimiter || '.'),
-                done = undefined;
+                done;
 
             /* Iterate each path until done */
             while (!done && paths.length > 0) {
@@ -536,8 +864,7 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
 
             /* Decide to use Array iterator or Object iterator */
             if (Array.isArray(this)) {
-                var i = undefined,
-                    ln = undefined;
+                var i, ln;
 
                 if (!reverse) {
                     /* Iterating each items */
@@ -588,8 +915,7 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
                 self = this.$dir();
 
             /* Iterate each sources */
-
-            var _loop = function _loop(i) {
+            for (var i = 0; i < sources.length; ++i) {
                 /* Creating source holder and source maps */
                 var base = sources[i],
                     next = base.$dir(),
@@ -629,10 +955,6 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
                         }
                     });
                 }
-            };
-
-            for (var i = 0; i < sources.length; ++i) {
-                _loop(i);
             }
 
             return this;
@@ -652,7 +974,7 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             /* Creating Sorter */
             function sort(target) {
                 /* Creating result */
-                var result = undefined;
+                var result;
 
                 /* Array Sorter */
                 if (Array.isArray(target)) {
@@ -724,8 +1046,6 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
          * @returns {*}
          */
         $group: function $group(column, mode) {
-            var _this2 = this;
-
             if (!Array.isArray(this) || !'number' === (typeof column === 'undefined' ? 'undefined' : _typeof(column))) return;
 
             /* Create group and current index */
@@ -739,48 +1059,44 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
 
             /* Start Grouping */
             if (mode === 'split') {
-                (function () {
-                    var gpn = Math.ceil(_this2.length / column),
+                var gpn = Math.ceil(this.length / column),
+                    crg = 1;
+
+                this.$each(function (val) {
+                    group[currn].push(val);
+
+                    if (crg === gpn) {
                         crg = 1;
-
-                    _this2.$each(function (val) {
-                        group[currn].push(val);
-
-                        if (crg === gpn) {
-                            crg = 1;
-                            currn++;
-                        } else {
-                            crg++;
-                        }
-                    });
-                })();
+                        currn++;
+                    } else {
+                        crg++;
+                    }
+                });
             } else if (mode === 'chunk') {
-                (function () {
-                    /* Create child group */
-                    var childGroup = [];
+                /* Create child group */
+                var childGroup = [];
 
-                    /* Reset parent group */
-                    group = [];
+                /* Reset parent group */
+                group = [];
 
-                    _this2.$each(function (val, i) {
-                        /* Push current value to child group */
-                        childGroup.push(val);
+                this.$each(function (val, i) {
+                    /* Push current value to child group */
+                    childGroup.push(val);
 
-                        if (currn === column - 1 || i === this.length - 1) {
-                            /* Add child group to parent group */
-                            group.push(childGroup);
+                    if (currn === column - 1 || i === this.length - 1) {
+                        /* Add child group to parent group */
+                        group.push(childGroup);
 
-                            /* Reste child group */
-                            childGroup = [];
+                        /* Reste child group */
+                        childGroup = [];
 
-                            /* Reset child index */
-                            currn = 0;
-                        } else {
-                            /* Increase child index */
-                            currn++;
-                        }
-                    });
-                })();
+                        /* Reset child index */
+                        currn = 0;
+                    } else {
+                        /* Increase child index */
+                        currn++;
+                    }
+                });
             } else {
                 this.$each(function (val) {
                     /* Push value to current child */
@@ -797,6 +1113,30 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             }
 
             return group;
+        },
+
+        /**
+         * Prototype Extender
+         * Create new prototype methods to the current object/array.
+         *
+         * @param name
+         * @param handler
+         * @returns {Object}
+         */
+        $ext: function $ext(name, handler) {
+            if (isString(name) && isFunction(handler)) {
+                Object.defineProperty(this.constructor.prototype, name, {
+                    enumerable: false,
+                    writable: true,
+                    value: handler
+                });
+            } else if (isObject(name)) {
+                name.$each(function (name, handler) {
+                    this.$ext(name, handler);
+                });
+            }
+
+            return this;
         }
     };
 
@@ -889,7 +1229,7 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
     var methods = {
         /* Number Iterator */
 
-        $each: function $each(handler, reverse) {
+        each$: function each$(handler, reverse) {
             if (!'function' === (typeof handler === 'undefined' ? 'undefined' : _typeof(handler))) return;
 
             var i;
@@ -905,6 +1245,11 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
             }
 
             return this;
+        },
+
+        /* @deprecated */
+        $each: function $each(handler, reverse) {
+            return this.each$(handler, reverse);
         }
     };
 
