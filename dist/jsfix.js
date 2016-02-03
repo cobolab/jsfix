@@ -178,36 +178,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         },
 
         /**
-         * URL Checker
-         * Check does the argument type is a URL.
-         *
-         * @param arg - Argument variable name.
-         * @returns {boolean}
-         */
-        isURL: function isURL(arg) {
-            return (/^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i.test(arg) ? true : false
-            );
-        },
-        isNotURL: function isNotURL(arg) {
-            return !isURL(arg);
-        },
-
-        /**
-         * Email Checker
-         * Check does the argument type is an Email.
-         *
-         * @param arg - Argument variable name.
-         * @returns {boolean}
-         */
-        isEmail: function isEmail(arg) {
-            return (/^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,6})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)$/i.test(arg) ? true : false
-            );
-        },
-        isNotEmail: function isNotEmail(arg) {
-            return !isEmail(arg);
-        },
-
-        /**
          * Type Arguments Checker
          * Check does the given argument is an Arguments
          *
@@ -316,16 +286,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         },
 
         // VALUE CHECKER
+
+        /**
+         * Empty Checker
+         * Check does the given argument is an empty object, array, or string.
+         *
+         * @param arg
+         * @returns {boolean}
+         */
         isEmpty: function isEmpty(arg) {
             if (isObject(arg)) arg = Object.keys(arg);
 
             return arg.length < 1;
+        },
+        isNotEmpty: function isNotEmpty(arg) {
+            return !isEmpty(arg);
         }
     };
+
+    // Registering
 
     var _loop = function _loop(key) {
         methods['is' + key] = function (arg) {
             return RegName[key].test(arg);
+        };
+
+        methods['isNot' + key] = function (arg) {
+            return !methods['is' + key](arg);
         };
     };
 
@@ -394,7 +381,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         } else {
                             this.looper.call(this, item, this.cursor - 1, this);
                         }
-                    } else {
+                    } else if (this.cursor === this.length) {
                         if ('function' === typeof this.final) {
                             this.final.call(this);
                         }
@@ -422,6 +409,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 if ('function' === typeof fn) {
                     this.final = fn;
                 }
+
+                return this;
             }
         }, {
             key: 'break',
@@ -433,6 +422,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         this.error.call(this);
                     }
                 }
+
+                return this;
             }
         }]);
 
@@ -1229,7 +1220,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var methods = {
         /* Number Iterator */
 
-        each$: function each$(handler, reverse) {
+        $each: function $each(handler, reverse) {
             if (!'function' === (typeof handler === 'undefined' ? 'undefined' : _typeof(handler))) return;
 
             var i;
@@ -1245,11 +1236,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             return this;
-        },
-
-        /* @deprecated */
-        $each: function $each(handler, reverse) {
-            return this.each$(handler, reverse);
         }
     };
 

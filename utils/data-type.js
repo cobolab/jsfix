@@ -303,8 +303,6 @@
     Object.keys(methods).sort().forEach(function ( key ) {
         let value = methods[ key ];
 
-        console.log(key);
-
         Object.defineProperty(jsroot, key, {
             enumerable : false,
             writable   : false,
