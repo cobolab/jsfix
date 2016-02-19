@@ -548,6 +548,10 @@ Number.random(4, 10);
 
 ### Changelog
 
+#### v1.2.1 - Feb 20, 2016
+
+* Fixing wrong dependency.
+
 #### v1.2.0 - Feb 17, 2016
 
 * Changed **`$get`** to **`$gets`** due to conflict with angular.
