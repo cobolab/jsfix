@@ -75,7 +75,7 @@
          * @param defvalue [any]  - Default value when the given path is return undefined.
          * @returns {*}
          */
-        $get : function ( path, defvalue ) {
+        $gets : function ( path, defvalue ) {
             if ( !'string' === typeof path ) return;
 
             /* Define current scope, paths list, result and done status */
@@ -138,7 +138,7 @@
          * @param value {any}   - The value to be set to the path.
          * @returns {object}
          */
-        $set : function ( path, value ) {
+        $sets : function ( path, value ) {
             if ( !'string' === typeof path ) return;
 
             /* Define current scope and paths list */
@@ -190,8 +190,8 @@
          * @param value {any}   - The value to be added to the array.
          * @returns {object}
          */
-        $add : function ( path, value ) {
-            if ( Array.isArray(this.$get(path)) ) {
+        $adds : function ( path, value ) {
+            if ( Array.isArray(this.$gets(path)) ) {
                 var current = this, paths = path.split(this.__delimiter || '.');
 
                 while ( paths.length > 0 ) {
@@ -213,7 +213,7 @@
          * @param length [number] - The length of item that will be removed. Only used to remove array items.
          * @returns {patches}
          */
-        $del : function ( path, length ) {
+        $dels : function ( path, length ) {
             /* Define current scope, paths list and done stat */
             var current = this, paths = path.split(this.__delimiter || '.'), done;
 
@@ -259,7 +259,7 @@
          * @param noroot {boolean} - If true, the root object will excluded. E.g: { a: { d: 2 }, b: 1} will resulting { a.d, b }.
          * @returns {{}}
          */
-        $dir : function ( noroot ) {
+        $dirs : function ( noroot ) {
             /* Define current path scope and path list */
             var current = '', maps = {};
 
@@ -321,7 +321,7 @@
          *                              The source and target type should be equal (object to object) (array to array).
          * @returns {Object}
          */
-        $dif : function ( from ) {
+        $difs : function ( from ) {
             /* Return zero result if the object source and the object type is not equal. */
             if ( Array.isArray(this) && !Array.isArray(from) ) return {};
             if ( Array.isArray(from) && !Array.isArray(this) ) return {};
@@ -331,8 +331,8 @@
 
             if ( 'object' === typeof from ) {
                 // Parsing the both object paths.
-                var cur = this.$dir(true);
-                var src = from.$dir(true);
+                var cur = this.$dirs(true);
+                var src = from.$dirs(true);
 
                 // Change the iterated items to the higher length.
                 var trg = cur;
@@ -341,8 +341,8 @@
 
                 // Iterating each path to match the value.
                 trg.$each(( key, val ) => {
-                    if ( this.$get(key) !== from.$get(key) ) {
-                        dif[ key ] = { old : this.$get(key), new : from.$get(key) };
+                    if ( this.$gets(key) !== from.$gets(key) ) {
+                        dif[ key ] = { old : this.$gets(key), new : from.$gets(key) };
                     }
                 });
             }
@@ -412,12 +412,12 @@
             if ( !Array.isArray(ignore) ) ignore = [];
 
             /* Creating target holder and target maps */
-            var main = this, self = this.$dir();
+            var main = this, self = this.$dirs();
 
             /* Iterate each sources */
             for ( var i = 0; i < sources.length; ++i ) {
                 /* Creating source holder and source maps */
-                var base = sources[ i ], next = base.$dir(), igm = '??';
+                var base = sources[ i ], next = base.$dirs(), igm = '??';
 
                 /* Continue if type of target is equal to type of source */
                 if ( (Array.isArray(main) && Array.isArray(base)) || (!Array.isArray(main) && !Array.isArray(base)) ) {
@@ -440,17 +440,17 @@
 
                         /* Create new property if not exist */
                         if ( !self[ path ] ) {
-                            main.$set(path, value.body);
+                            main.$sets(path, value.body);
                         }
                         else {
                             /* Replace with new value if type of next target value is different with type of next target value */
                             if ( self[ path ].type !== value.type ) {
-                                main.$set(path, value.body);
+                                main.$sets(path, value.body);
                             }
                             else {
                                 /* Replace if type of next target is not object or array */
                                 if ( value.type !== 'object' && value.type !== 'array' ) {
-                                    main.$set(path, value.body);
+                                    main.$sets(path, value.body);
                                 }
                             }
                         }
@@ -468,7 +468,7 @@
          * @param handler [function] - Optional function to handle the sort function.
          * @returns {*}
          */
-        $sort : function ( handler ) {
+        $sorts : function ( handler ) {
             /* Perform Sorting */
             return sort(this);
 
@@ -548,7 +548,7 @@
          * @param mode {string}   - Wrapping mode, split or chunk.
          * @returns {*}
          */
-        $group : function ( column, mode ) {
+        $groups : function ( column, mode ) {
             if ( !Array.isArray(this) || !'number' === typeof column ) return;
 
             /* Create group and current index */

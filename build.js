@@ -3,6 +3,7 @@
 var babe = require('babel-core'),
     glob = require('glob'),
     path = require('path'),
+    ugly = require('uglify-js'),
     file = require('fs-extra');
 
 // Creating scripts list.
@@ -48,5 +49,11 @@ file.ensureFileSync('./dist/jsfix.js.map');
 // Writing compiled scripts to file.
 file.writeFileSync('./dist/jsfix.js', compiled.code);
 file.writeJsonSync('./dist/jsfix.js.map', compiled.map);
+
+// Minifying
+var min = ugly.minify('./dist/jsfix.js');
+
+file.ensureFileSync('./dist/jsfix.min.js');
+file.writeFileSync('./dist/jsfix.min.js', min.code);
 
 console.log('Build success!');

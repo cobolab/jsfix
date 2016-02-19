@@ -544,7 +544,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * @param defvalue [any]  - Default value when the given path is return undefined.
          * @returns {*}
          */
-        $get: function $get(path, defvalue) {
+        $gets: function $gets(path, defvalue) {
             if (!'string' === (typeof path === 'undefined' ? 'undefined' : _typeof(path))) return;
 
             /* Define current scope, paths list, result and done status */
@@ -618,7 +618,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * @param value {any}   - The value to be set to the path.
          * @returns {object}
          */
-        $set: function $set(path, value) {
+        $sets: function $sets(path, value) {
             if (!'string' === (typeof path === 'undefined' ? 'undefined' : _typeof(path))) return;
 
             /* Define current scope and paths list */
@@ -680,8 +680,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * @param value {any}   - The value to be added to the array.
          * @returns {object}
          */
-        $add: function $add(path, value) {
-            if (Array.isArray(this.$get(path))) {
+        $adds: function $adds(path, value) {
+            if (Array.isArray(this.$gets(path))) {
                 var current = this,
                     paths = path.split(this.__delimiter || '.');
 
@@ -704,7 +704,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * @param length [number] - The length of item that will be removed. Only used to remove array items.
          * @returns {patches}
          */
-        $del: function $del(path, length) {
+        $dels: function $dels(path, length) {
             /* Define current scope, paths list and done stat */
             var current = this,
                 paths = path.split(this.__delimiter || '.'),
@@ -749,7 +749,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * @param noroot {boolean} - If true, the root object will excluded. E.g: { a: { d: 2 }, b: 1} will resulting { a.d, b }.
          * @returns {{}}
          */
-        $dir: function $dir(noroot) {
+        $dirs: function $dirs(noroot) {
             /* Define current path scope and path list */
             var current = '',
                 maps = {};
@@ -811,7 +811,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          *                              The source and target type should be equal (object to object) (array to array).
          * @returns {Object}
          */
-        $dif: function $dif(from) {
+        $difs: function $difs(from) {
             var _this = this;
 
             /* Return zero result if the object source and the object type is not equal. */
@@ -823,8 +823,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             if ('object' === (typeof from === 'undefined' ? 'undefined' : _typeof(from))) {
                 // Parsing the both object paths.
-                var cur = this.$dir(true);
-                var src = from.$dir(true);
+                var cur = this.$dirs(true);
+                var src = from.$dirs(true);
 
                 // Change the iterated items to the higher length.
                 var trg = cur;
@@ -833,8 +833,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 // Iterating each path to match the value.
                 trg.$each(function (key, val) {
-                    if (_this.$get(key) !== from.$get(key)) {
-                        dif[key] = { old: _this.$get(key), new: from.$get(key) };
+                    if (_this.$gets(key) !== from.$gets(key)) {
+                        dif[key] = { old: _this.$gets(key), new: from.$gets(key) };
                     }
                 });
             }
@@ -903,13 +903,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             /* Creating target holder and target maps */
             var main = this,
-                self = this.$dir();
+                self = this.$dirs();
 
             /* Iterate each sources */
             for (var i = 0; i < sources.length; ++i) {
                 /* Creating source holder and source maps */
                 var base = sources[i],
-                    next = base.$dir(),
+                    next = base.$dirs(),
                     igm = '??';
 
                 /* Continue if type of target is equal to type of source */
@@ -932,15 +932,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                         /* Create new property if not exist */
                         if (!self[path]) {
-                            main.$set(path, value.body);
+                            main.$sets(path, value.body);
                         } else {
                             /* Replace with new value if type of next target value is different with type of next target value */
                             if (self[path].type !== value.type) {
-                                main.$set(path, value.body);
+                                main.$sets(path, value.body);
                             } else {
                                 /* Replace if type of next target is not object or array */
                                 if (value.type !== 'object' && value.type !== 'array') {
-                                    main.$set(path, value.body);
+                                    main.$sets(path, value.body);
                                 }
                             }
                         }
@@ -958,7 +958,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * @param handler [function] - Optional function to handle the sort function.
          * @returns {*}
          */
-        $sort: function $sort(handler) {
+        $sorts: function $sorts(handler) {
             /* Perform Sorting */
             return sort(this);
 
@@ -1036,7 +1036,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * @param mode {string}   - Wrapping mode, split or chunk.
          * @returns {*}
          */
-        $group: function $group(column, mode) {
+        $groups: function $groups(column, mode) {
             if (!Array.isArray(this) || !'number' === (typeof column === 'undefined' ? 'undefined' : _typeof(column))) return;
 
             /* Create group and current index */
