@@ -131,7 +131,7 @@ Check does the variable value is empty. Value can be Object, Array, and String.
 
 #### **Utilities**
 
-##### **`$dext()`**
+#### **`$dext()`**
 
 Assign new prototypes to Javascript objects.
 
@@ -144,7 +144,9 @@ $dest(String, 'keys', function() { return this.split(''); });    // Assign proto
 console.log('String'.keys()); // ['S', 't', 'r', 'i', 'n', 'g']
 ```
 
-##### **`$dget()`**
+***
+
+#### **`$dget()`**
 
 Define getter to Javascript objects.
 
@@ -158,7 +160,9 @@ $dget(x, 'c', function() { return 'Value of c is: 3' });
 console.log(x.c); // Value of c is: 3
 ```
 
-##### **`$dset()`**
+***
+
+#### **`$dset()`**
 
 Define setter to Javascript objects.
 
@@ -228,7 +232,7 @@ Adding some methods to the `Object.prototype`.
 
 #### **Direct Iterator**
 
-##### **`obj.$each()`, `arr.$each()`, `str.$each()`, and `num.$each()`**
+#### **`obj.$each()`, `arr.$each()`, `str.$each()`, and `num.$each()`**
 
 A direct object iterator, with reversed support for iterating array, number and string.
 
@@ -276,14 +280,14 @@ arr.$each, function(value, index) {
 
 An array and object path helpers.
 
-##### **`obj.$gets()`**
+#### **`obj.$get()`** **[browser: `obj.$gets()`]**
 
 Get an object and array value using path.
 
 **Usage**
 
 ``` js
-obj.$gets(path, default);
+obj.$get(path, default);
 ```
 
 * **path**      - `Required` String path (e.g: `a.b.c`)
@@ -306,22 +310,24 @@ var obj = {
 
 var arr = [ 'a', 'b', { a: 1, b: 2 } ]
 
-console.log(obj.$gets('a.aa'));       // undefined
-console.log(obj.$gets('c.cb.cba'));   // 1
-console.log(obj.$gets('c.cc', 10));   // 10 since the value is undefined.
+console.log(obj.$get('a.aa'));       // undefined
+console.log(obj.$get('c.cb.cba'));   // 1
+console.log(obj.$get('c.cc', 10));   // 10 since the value is undefined.
 
-console.log(arr.$gets('0.d'));        // undefined
-console.log(arr.$gets('2.a'));        // 1
+console.log(arr.$get('0.d'));        // undefined
+console.log(arr.$get('2.a'));        // 1
 ```
 
-##### **`obj.$sets()`**
+***
+
+#### **`obj.$set()`** **[browser: `obj.$sets()`]**
 
 Set an object and array value using path.
 
 **Usage**
 
 ``` js
-obj.$sets(path, value);
+obj.$set(path, value);
 ```
 
 * **path**  - `Required` String path (e.g: `a.b.c`)
@@ -333,18 +339,20 @@ obj.$sets(path, value);
 var obj = {},
     arr = [];
 
-obj.$sets('a.b.c', 100); // { a: { b: { c: 100 } } }
-arr.$sets('0.a.b', 100); // [ { a: { b: 100 } } ]
+obj.$set('a.b.c', 100); // { a: { b: { c: 100 } } }
+arr.$set('0.a.b', 100); // [ { a: { b: 100 } } ]
 ```
 
-##### **`obj.$adds()`**
+***
+
+#### **`obj.$add()`** **[browser: `obj.$adds()`]**
 
 Push an item into array in path.
 
 **Usage**
 
 ``` js
-obj.$adds(path, value);
+obj.$add(path, value);
 ```
 
 * **path**  - `Required` String path.
@@ -355,17 +363,19 @@ obj.$adds(path, value);
 ``` js
 var obj = { a: { b: { c: [] } } };
 
-obj.$adds('a.b.c', 'item'); // { a: { b: { c: [ 'item' ] } } }
+obj.$add('a.b.c', 'item'); // { a: { b: { c: [ 'item' ] } } }
 ```
 
-##### **`obj.$dels()`**
+***
+
+#### **`obj.$del()`** **[browser: `obj.$dels()`]**
 
 Array and Object path remover.
 
 **Usage**
 
 ``` js
-obj.$dels(path, length);
+obj.$del(path, length);
 ```
 
 * **path**      - `Required` String path.
@@ -376,18 +386,28 @@ obj.$dels(path, length);
 ``` js
 var obj = { a: { b: { c: [1,2,3], d: 1 } } };
 
-obj.$dels('a.b.d');      // Remove property "d"
-obj.$dels('a.b.c.0', 2); // Remove 1 and 2 from c.
+obj.$del('a.b.d');      // Remove property "d"
+obj.$del('a.b.c.0', 2); // Remove 1 and 2 from c.
 ```
 
-##### **`obj.$dirs()`**
+***
+
+#### **`obj.$dir()`** **[browser: `obj.$dirs()`]**
+
+
+
+
+
+
+
+
 
 Extract the paths from array or object.
 
 **Usage**
 
 ``` js
-obj.$dirs(exclude_root);
+obj.$dir(exclude_root);
 ```
 
 * **exclude_root** - *`Optional`* Does the root object or array is included.
@@ -397,17 +417,19 @@ obj.$dirs(exclude_root);
 ``` js
 var obj = { a: { b: { c: 3, d: 4 } } };
 
-obj.$dirs(true);     // { 'a.b.c': { type: 'number', body: 3 }, 'a.b.d': { type: 'number', body: 4 }
+obj.$dir(true);     // { 'a.b.c': { type: 'number', body: 3 }, 'a.b.d': { type: 'number', body: 4 }
 ```
 
-##### **`obj.$difs()`**
+***
+
+#### **`obj.$diff()`** **[browser: `obj.$diffs()`]**
 
 Compare two object (object to object, array to array).
 
 **Usage**
 
 ``` js
-obj.$difs(target);
+obj.$diff(target);
 ```
 
 * **target** - `Required` Array or object to compare from.
@@ -418,23 +440,24 @@ obj.$difs(target);
 var a = { a: 1, b: 2 },
     b = { a: 2, b: 1, c: 3 };
 
-a.$difs(b);
+a.$diff(b);
 /*
 { a: { old: 1, new: 2 },
   b: { old: 2, new: 1 },
   c: { old: undefined, new: 3 } }
 */
 
-b.$difs(a);
+b.$diff(a);
 /*
 { a: { old: 2, new: 1 },
   b: { old: 1, new: 2 },
   c: { old: 3, new: undefined } }
 */
-
 ```
 
-##### **`obj.$join()`**
+***
+
+#### **`obj.$join()`**
 
 Recursively merge two objects or arrays (object to object, array to array).
 
@@ -456,7 +479,9 @@ var a = { a: 1, b: 2 },
 a.$join(b); { a: 1, b: 1, c: 3 }
 ```
 
-##### **`obj.$sorts()`**
+***
+
+#### **`obj.$sort()`** **[browser: `obj.$sorts()`]**
 
 Recursively sort object or array.
 
@@ -473,10 +498,16 @@ obj.$sorts(handler);
 ``` js
 var obj = { d: 4, b: 2, c: 3, a: 1 };
 
-obj.$sorts(); // { a: 1, b: 2, c: 3, d: 4 };
+obj.$sort(); // { a: 1, b: 2, c: 3, d: 4 };
 ```
 
-##### **`obj.$keys()`**
+***
+
+#### **`obj.$keys()`**
+
+
+
+
 
 Direct Object.keys()
 
@@ -488,14 +519,16 @@ var obj = { a: 1, b: 2 };
 obj.$keys(); // [ 'a', 'b' ]
 ```
 
-##### **`obj.$groups()`**
+***
+
+#### **`obj.$group()`** **[browser: `obj.$groups()`]**
 
 Group an array items with specific column per row.
 
 **Usage**
 
 ``` js
-obj.$groups(column, mode);
+obj.$group(column, mode);
 ```
 
 * **column**    - `Required` The number of columns per row.
@@ -506,18 +539,20 @@ obj.$groups(column, mode);
 ``` js
 var arr = [ 1, 2, 3, 4, 5, 6, 7, 8 ];
 
-arr.$groups(3);          // [ [ 1, 4, 7 ], [ 2, 5, 8 ], [ 3, 6 ] ]
-arr.$groups(3, 'split'); // [ [ 1, 2, 3 ], [ 4, 5, 6 ], [ 7, 8 ] ]
+arr.$group(3);          // [ [ 1, 4, 7 ], [ 2, 5, 8 ], [ 3, 6 ] ]
+arr.$group(3, 'split'); // [ [ 1, 2, 3 ], [ 4, 5, 6 ], [ 7, 8 ] ]
 ```
 
-##### **`obj.$ext()`**
+***
+
+#### **`obj.$extend()`**
 
 Extend the already defined object and array prototypes.
 
 **Usage**
 
 ``` js
-obj.$ext(name, handler);
+obj.$extend(name, handler);
 ```
 
 * **`name`**    - String prototype name, or object contains `key` as name and `value` as handler.
@@ -528,12 +563,14 @@ obj.$ext(name, handler);
 ``` js
 var x = { a: 1, b: 2 }
 
-x.$ext('keys', function() { return Object.keys(this); });
+x.$extend('keys', function() { return Object.keys(this); });
 
 console.log(x.keys()); // ['a', 'b']
 ```
 
-##### **`Number.random()`**
+***
+
+#### **`Number.random()`**
 
 Generate random number.
 
@@ -548,6 +585,12 @@ Number.random(4, 10);
 
 ### Changelog
 
+#### v1.3.0 - Mar 17, 2016
+
+* Object methods changes: **`$gets`, `$sets`, `$adds`, `$dels`, `$diffs`, `$sorts`, and `$groups`** only for browser. NodeJS users will use `.$get()`, `.$set()`, and so on.
+* Changed **`.$ext()`** to **`.$extend()`**
+* Changed **`.$dif()`** to **`.$diff()`**
+
 #### v1.2.1 - Feb 20, 2016
 
 * Fixing wrong dependency.
@@ -558,7 +601,7 @@ Number.random(4, 10);
 * Chagned **`$set`** to **`$sets`** due to conflict with angular.
 * Changed **`$add`** to **`$adds`** due to conflict with angular.
 * Changed **`$del`** to **`$dels`** due to conflict with angular.
-* Changed **`$del`** to **`$dirs`** due to conflict with angular.
+* Changed **`$dirs`** to **`$dirs`** due to conflict with angular.
 * Changed **`$dif`** to **`$difs`** due to conflict with angular.
 * Changed **`$sort`** to **`$sorts`** due to conflict with angular.
 * Changed **`$group`** to **`$groups`** due to conflict with angular.

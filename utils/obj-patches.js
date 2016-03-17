@@ -75,7 +75,7 @@
          * @param defvalue [any]  - Default value when the given path is return undefined.
          * @returns {*}
          */
-        $gets : function ( path, defvalue ) {
+        $get : function ( path, defvalue ) {
             if ( !'string' === typeof path ) return;
 
             /* Define current scope, paths list, result and done status */
@@ -138,7 +138,7 @@
          * @param value {any}   - The value to be set to the path.
          * @returns {object}
          */
-        $sets : function ( path, value ) {
+        $set : function ( path, value ) {
             if ( !'string' === typeof path ) return;
 
             /* Define current scope and paths list */
@@ -190,8 +190,8 @@
          * @param value {any}   - The value to be added to the array.
          * @returns {object}
          */
-        $adds : function ( path, value ) {
-            if ( Array.isArray(this.$gets(path)) ) {
+        $add : function ( path, value ) {
+            if ( Array.isArray(this.$get(path)) ) {
                 var current = this, paths = path.split(this.__delimiter || '.');
 
                 while ( paths.length > 0 ) {
@@ -213,7 +213,7 @@
          * @param length [number] - The length of item that will be removed. Only used to remove array items.
          * @returns {patches}
          */
-        $dels : function ( path, length ) {
+        $del : function ( path, length ) {
             /* Define current scope, paths list and done stat */
             var current = this, paths = path.split(this.__delimiter || '.'), done;
 
@@ -259,7 +259,7 @@
          * @param noroot {boolean} - If true, the root object will excluded. E.g: { a: { d: 2 }, b: 1} will resulting { a.d, b }.
          * @returns {{}}
          */
-        $dirs : function ( noroot ) {
+        $dir : function ( noroot ) {
             /* Define current path scope and path list */
             var current = '', maps = {};
 
@@ -321,7 +321,7 @@
          *                              The source and target type should be equal (object to object) (array to array).
          * @returns {Object}
          */
-        $difs : function ( from ) {
+        $diff : function ( from ) {
             /* Return zero result if the object source and the object type is not equal. */
             if ( Array.isArray(this) && !Array.isArray(from) ) return {};
             if ( Array.isArray(from) && !Array.isArray(this) ) return {};
@@ -331,8 +331,8 @@
 
             if ( 'object' === typeof from ) {
                 // Parsing the both object paths.
-                var cur = this.$dirs(true);
-                var src = from.$dirs(true);
+                var cur = this.$dir(true);
+                var src = from.$dir(true);
 
                 // Change the iterated items to the higher length.
                 var trg = cur;
@@ -341,13 +341,18 @@
 
                 // Iterating each path to match the value.
                 trg.$each(( key, val ) => {
-                    if ( this.$gets(key) !== from.$gets(key) ) {
-                        dif[ key ] = { old : this.$gets(key), new : from.$gets(key) };
+                    if ( this.$get(key) !== from.$get(key) ) {
+                        dif[ key ] = { old : this.$get(key), new : from.$get(key) };
                     }
                 });
             }
 
             return dif;
+        },
+
+        // Deprecating.
+        $dif : function ( from ) {
+            return this.$diff(from);
         },
 
         /**
@@ -412,12 +417,12 @@
             if ( !Array.isArray(ignore) ) ignore = [];
 
             /* Creating target holder and target maps */
-            var main = this, self = this.$dirs();
+            var main = this, self = this.$dir();
 
             /* Iterate each sources */
             for ( var i = 0; i < sources.length; ++i ) {
                 /* Creating source holder and source maps */
-                var base = sources[ i ], next = base.$dirs(), igm = '??';
+                var base = sources[ i ], next = base.$dir(), igm = '??';
 
                 /* Continue if type of target is equal to type of source */
                 if ( (Array.isArray(main) && Array.isArray(base)) || (!Array.isArray(main) && !Array.isArray(base)) ) {
@@ -440,17 +445,17 @@
 
                         /* Create new property if not exist */
                         if ( !self[ path ] ) {
-                            main.$sets(path, value.body);
+                            main.$set(path, value.body);
                         }
                         else {
                             /* Replace with new value if type of next target value is different with type of next target value */
                             if ( self[ path ].type !== value.type ) {
-                                main.$sets(path, value.body);
+                                main.$set(path, value.body);
                             }
                             else {
                                 /* Replace if type of next target is not object or array */
                                 if ( value.type !== 'object' && value.type !== 'array' ) {
-                                    main.$sets(path, value.body);
+                                    main.$set(path, value.body);
                                 }
                             }
                         }
@@ -468,7 +473,7 @@
          * @param handler [function] - Optional function to handle the sort function.
          * @returns {*}
          */
-        $sorts : function ( handler ) {
+        $sort : function ( handler ) {
             /* Perform Sorting */
             return sort(this);
 
@@ -548,7 +553,7 @@
          * @param mode {string}   - Wrapping mode, split or chunk.
          * @returns {*}
          */
-        $groups : function ( column, mode ) {
+        $group : function ( column, mode ) {
             if ( !Array.isArray(this) || !'number' === typeof column ) return;
 
             /* Create group and current index */
@@ -631,21 +636,25 @@
          * @param handler
          * @returns {Object}
          */
-        $ext : function ( name, handler ) {
+        $extend : function ( name, handler ) {
             if ( isString(name) && isFunction(handler) ) {
                 Object.defineProperty(this.constructor.prototype, name, {
                     enumerable : false,
-                    writable   : true,
                     value      : handler
                 });
             }
             else if ( isObject(name) ) {
                 name.$each(function ( name, handler ) {
-                    this.$ext(name, handler);
+                    this.$extend(name, handler);
                 });
             }
 
             return this;
+        },
+
+        // Deprecating.
+        $ext : function ( name, handler ) {
+            return this.$extend(name, handler);
         }
     }
 

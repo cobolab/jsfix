@@ -15,6 +15,19 @@ var scripts = [
     'int-patches'
 ]
 
+// Replace methods for Browser use.
+var replaces = {
+    get   : 'gets',
+    set   : 'sets',
+    add   : 'adds',
+    del   : 'dels',
+    dir   : 'dirs',
+    diff  : 'diffs',
+    dif   : 'difs',
+    sort  : 'sorts',
+    group : 'groups'
+}
+
 // Creating script content holder.
 var content = '';
 
@@ -34,6 +47,15 @@ scripts.forEach(( name ) => {
 
 // Adding sourcemap url.
 content += '/*# sourceMappingURL=jsfix.js.map */';
+
+// Replacing methods for browser.
+Object.keys(replaces).forEach(name => {
+    let reg = new RegExp(`\\$${name}\\s+:`, 'g');
+
+    console.log(reg);
+
+    content = content.replace(reg, `\$${replaces[ name ]}:`);
+});
 
 // Compiling the scripts.
 var compiled = babe.transform(content, {

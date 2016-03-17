@@ -681,7 +681,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * @returns {object}
          */
         $adds: function $adds(path, value) {
-            if (Array.isArray(this.$gets(path))) {
+            if (Array.isArray(this.$get(path))) {
                 var current = this,
                     paths = path.split(this.__delimiter || '.');
 
@@ -811,7 +811,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          *                              The source and target type should be equal (object to object) (array to array).
          * @returns {Object}
          */
-        $difs: function $difs(from) {
+        $diffs: function $diffs(from) {
             var _this = this;
 
             /* Return zero result if the object source and the object type is not equal. */
@@ -823,8 +823,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             if ('object' === (typeof from === 'undefined' ? 'undefined' : _typeof(from))) {
                 // Parsing the both object paths.
-                var cur = this.$dirs(true);
-                var src = from.$dirs(true);
+                var cur = this.$dir(true);
+                var src = from.$dir(true);
 
                 // Change the iterated items to the higher length.
                 var trg = cur;
@@ -833,13 +833,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 // Iterating each path to match the value.
                 trg.$each(function (key, val) {
-                    if (_this.$gets(key) !== from.$gets(key)) {
-                        dif[key] = { old: _this.$gets(key), new: from.$gets(key) };
+                    if (_this.$get(key) !== from.$get(key)) {
+                        dif[key] = { old: _this.$get(key), new: from.$get(key) };
                     }
                 });
             }
 
             return dif;
+        },
+
+        // Deprecating.
+        $difs: function $difs(from) {
+            return this.$diff(from);
         },
 
         /**
@@ -903,13 +908,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             /* Creating target holder and target maps */
             var main = this,
-                self = this.$dirs();
+                self = this.$dir();
 
             /* Iterate each sources */
             for (var i = 0; i < sources.length; ++i) {
                 /* Creating source holder and source maps */
                 var base = sources[i],
-                    next = base.$dirs(),
+                    next = base.$dir(),
                     igm = '??';
 
                 /* Continue if type of target is equal to type of source */
@@ -932,15 +937,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                         /* Create new property if not exist */
                         if (!self[path]) {
-                            main.$sets(path, value.body);
+                            main.$set(path, value.body);
                         } else {
                             /* Replace with new value if type of next target value is different with type of next target value */
                             if (self[path].type !== value.type) {
-                                main.$sets(path, value.body);
+                                main.$set(path, value.body);
                             } else {
                                 /* Replace if type of next target is not object or array */
                                 if (value.type !== 'object' && value.type !== 'array') {
-                                    main.$sets(path, value.body);
+                                    main.$set(path, value.body);
                                 }
                             }
                         }
@@ -1114,20 +1119,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * @param handler
          * @returns {Object}
          */
-        $ext: function $ext(name, handler) {
+        $extend: function $extend(name, handler) {
             if (isString(name) && isFunction(handler)) {
                 Object.defineProperty(this.constructor.prototype, name, {
                     enumerable: false,
-                    writable: true,
                     value: handler
                 });
             } else if (isObject(name)) {
                 name.$each(function (name, handler) {
-                    this.$ext(name, handler);
+                    this.$extend(name, handler);
                 });
             }
 
             return this;
+        },
+
+        // Deprecating.
+        $ext: function $ext(name, handler) {
+            return this.$extend(name, handler);
         }
     };
 
