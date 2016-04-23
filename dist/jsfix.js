@@ -1123,6 +1123,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             if (isString(name) && isFunction(handler)) {
                 Object.defineProperty(this.constructor.prototype, name, {
                     enumerable: false,
+                    writable: true,
                     value: handler
                 });
             } else if (isObject(name)) {
@@ -1145,6 +1146,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         /* Locking Extension */
         Object.defineProperty(Object.prototype, key, {
             enumerable: false,
+            writable: true,
             value: patches[key]
         });
     }

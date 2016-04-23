@@ -585,6 +585,10 @@ Number.random(4, 10);
 
 ### Changelog
 
+#### v1.3.1 - Apr 23, 2016
+
+* Fixing error when using `readable-stream`
+
 #### v1.3.0 - Mar 17, 2016
 
 * Object methods changes: **`$gets`, `$sets`, `$adds`, `$dels`, `$diffs`, `$sorts`, and `$groups`** only for browser. NodeJS users will use `.$get()`, `.$set()`, and so on.
