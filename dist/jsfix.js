@@ -9,8 +9,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function (jsroot) {
     "use strict";
 
-    // Credit Card RegExp
+    // Do not reinit if already initialized.
 
+    if (jsroot.JSFix) {
+        return;
+    }
+
+    // Credit Card RegExp
     var regCC = /^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$/,
 
     // Security Number
@@ -335,6 +340,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function (jsroot) {
     "use strict";
 
+    // Do not reinit if already initialized.
+
+    if (jsroot.JSFix) {
+        return;
+    }
+
     /* Simple Object or Array Looper */
 
     var Looper = (function () {
@@ -469,6 +480,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function (jsroot) {
     'use strict';
 
+    // Do not reinit if already initialized.
+
+    if (jsroot.JSFix) {
+        return;
+    }
+
     /**
      * Prototype Extender
      * Add new prototype to a Javascript Object Prototype.
@@ -478,7 +495,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @param handler   - Function to handle the prototype.
      * @constructor
      */
-
     jsroot.$dext = ProrotypeExtender;
 
     function ProrotypeExtender(target, name, handler) {
@@ -1151,11 +1167,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         });
     }
 })('undefined' !== typeof global ? global : window);
+
 (function (jsroot) {
     'use strict';
 
-    /* String Patches */
+    // Do not reinit if already initialized.
 
+    if (jsroot.JSFix) {
+        return;
+    }
+
+    /* String Patches */
     var patches = {
         /* Get lower string at index */
 
@@ -1214,11 +1236,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         });
     }
 })('undefined' !== typeof global ? global : window);
+
 (function (jsroot) {
     'use strict';
 
-    /* Number Patches */
+    // Do not reinit if already initialized.
 
+    if (jsroot.JSFix) {
+        return;
+    }
+
+    /* Number Patches */
     var patches = {
         /* Generate Random Number Between Two Number */
 
@@ -1267,4 +1295,5 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         });
     }
 })('undefined' !== typeof global ? global : window);
+
 /*# sourceMappingURL=jsfix.js.map */

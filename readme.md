@@ -585,6 +585,10 @@ Number.random(4, 10);
 
 ### Changelog
 
+#### v1.3.2 - May 11, 2016
+
+* Prevent reinitializing patches if already initialized.
+
 #### v1.3.1 - Apr 23, 2016
 
 * Fixing error when using `readable-stream`

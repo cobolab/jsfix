@@ -1,6 +1,11 @@
 (function ( jsroot ) {
     "use strict";
 
+    // Do not reinit if already initialized.
+    if (jsroot.JSFix) {
+        return;
+    }
+
     /* Simple Object or Array Looper */
     class Looper {
         constructor ( oba ) {

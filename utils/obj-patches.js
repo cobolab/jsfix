@@ -1,6 +1,11 @@
 (function ( jsroot ) {
     'use strict';
 
+    // Do not reinit if already initialized.
+    if (jsroot.JSFix) {
+        return;
+    }
+
     /**
      * Prototype Extender
      * Add new prototype to a Javascript Object Prototype.

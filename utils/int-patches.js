@@ -1,6 +1,11 @@
 (function ( jsroot ) {
     'use strict';
 
+    // Do not reinit if already initialized.
+    if (jsroot.JSFix) {
+        return;
+    }
+
     /* Number Patches */
     let patches = {
         /* Generate Random Number Between Two Number */

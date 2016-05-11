@@ -1,6 +1,11 @@
 (function ( jsroot ) {
     'use strict';
 
+    // Do not reinit if already initialized.
+    if (jsroot.JSFix) {
+        return;
+    }
+
     /* String Patches */
     let patches = {
         /* Get lower string at index */
